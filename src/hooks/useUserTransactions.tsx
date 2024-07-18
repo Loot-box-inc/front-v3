@@ -1,8 +1,8 @@
-import { supabase } from "@/supabase";
 import { Database } from "@/types/supabase";
 import { InitData } from "@telegram-apps/sdk";
 import { useEffect, useState } from "react";
-
+import axios from 'axios';
+const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL
 interface useUserTransactionsProps {
   initData?: InitData;
 }
@@ -17,10 +17,8 @@ export const useUserTransactions = ({ initData }: useUserTransactionsProps) => {
 
   useEffect(() => {
     const getData = async () => {
-      const data = await supabase.from("lootboxes").select();
-      // .eq("sender_id", initData?.user?.id as number);
-
-      setUserTransactions(data.data);
+      const allData = (await axios.get(`${BACKEND_URL}all`)).data;
+      setUserTransactions(allData.data);
     };
     console.log("useId", initData?.user?.id);
     getData();

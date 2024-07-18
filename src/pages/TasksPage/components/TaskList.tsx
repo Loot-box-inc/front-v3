@@ -1,8 +1,10 @@
 import { ActionButton } from "@/pages/TasksPage/components/ActionButton";
 import { ActionItem } from "@/pages/TasksPage/components/ActionItem";
-import { supabase } from "@/supabase";
+// import { supabase } from "@/supabase";
 import { initInitData, initUtils } from "@telegram-apps/sdk";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL
 
 export const TasksList = () => {
   const initData = initInitData();
@@ -11,27 +13,21 @@ export const TasksList = () => {
 
   const _onShare = async () => {
     try {
-      const { data } = await supabase
-        .from("lootboxes")
-        .select("uuid")
-        .is("sender_id", null); // get not used lootboxes only
+
+      // get not used lootboxes only
+      const data = (await axios.get(`${BACKEND_URL}notUsedLootbox`)).data;
 
       if (!data?.length) return;
 
       const lootbox = data[Math.floor(Math.random() * data.length)];
 
-      await supabase
-        .from("lootboxes")
-        .update({
-          sender_id: initData?.user?.id,
-          parent: initData?.startParam,
-        }) // пишем себя сендером = берем лутбокс
-        .eq("uuid", lootbox.uuid);
-
-      utils.shareURL(
-        `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.uuid}`,
-        "Look! Some cool app here!"
-      );
+      // write yourself as a sender = take a loot box
+      axios.put(`${BACKEND_URL}takeLootbox`, { initData, lootbox })
+        
+        utils.shareURL(
+          `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.uuid}`,
+          "Look! Some cool app here!"
+        );
 
       // onShare(true);
 
@@ -48,13 +44,13 @@ export const TasksList = () => {
       </h1>
       <div>
         <ActionItem
-          text="1. Share a lootbox with a friend/s"
+          text="1. Share a lootbox with a friends"
           actionButton={<ActionButton onShare={_onShare}>Send</ActionButton>}
         />
         <ActionItem
           text="2. Upload a video with you and your friends"
           actionButton={
-            <ActionButton disabled onShare={() => {}}>
+            <ActionButton disabled onShare={() => { }}>
               Upload
             </ActionButton>
           }
@@ -62,7 +58,7 @@ export const TasksList = () => {
         <ActionItem
           text="3. Join our group"
           actionButton={
-            <ActionButton disabled onShare={() => {}}>
+            <ActionButton disabled onShare={() => { }}>
               Join
             </ActionButton>
           }
