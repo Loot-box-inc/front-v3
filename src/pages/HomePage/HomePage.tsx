@@ -3,7 +3,7 @@ import { LockedLootbox } from "@/components/LockedLootbox";
 
 // import { useUserBalance } from "@/hooks/useUserBalance";
 
-import { initInitData } from "@telegram-apps/sdk";
+import { initInitData, initNavigator, initSettingsButton } from "@telegram-apps/sdk";
 import { useEffect, useState } from "react";
 // import { supabase } from "../../supabase";
 import { useNavigate } from "react-router-dom";
@@ -24,10 +24,13 @@ export function HomePage() {
   const [isLootboxAlreadyOpened, setIsLootboxAlreadyOpened] = useState(false);
   const [isNotFirstLootbox, setIsNotFirstLootbox] = useState(false);
 
+ 
+
   useEffect(() => {
     const run = async () => {
-
       //get data from server
+      console.log("initData => ", initData)
+      console.log("BACKEND_URL => ", BACKEND_URL)
       const data = (await axios.post(`${BACKEND_URL}initialData`, { initData })).data;
 
       // Handle no lootbox
