@@ -42,7 +42,7 @@ export const App: FC = () => {
   // as browser history.
   useEffect(() => {
     // navigator.attach();
-    // return () => navigator.detach();
+    // return () => navigator.detach();   //--history.back when satrt
   }, [navigator]);
 
   // if (

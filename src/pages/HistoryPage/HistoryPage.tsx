@@ -51,7 +51,7 @@ export const HistoryPage = () => {
               key={el.id}
               className="bg-black rounded-md mt-2 px-2 flex items-center gap-2"
             >
-              <img src="/box.png" height={75} width={75} />
+              <img src="/front-v3/box.png" height={75} width={75} />
               <p className="w-1/5">
                 {el.sender_updated_at
                   ? format(new Date(el.sender_updated_at), "hh:mm dd MMMyyyy")

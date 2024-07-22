@@ -1,6 +1,5 @@
 import { ActionButton } from "@/pages/TasksPage/components/ActionButton";
 import { ActionItem } from "@/pages/TasksPage/components/ActionItem";
-// import { supabase } from "@/supabase";
 import { initInitData, initUtils } from "@telegram-apps/sdk";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -22,12 +21,13 @@ export const TasksList = () => {
       const lootbox = data[Math.floor(Math.random() * data.length)];
 
       // write yourself as a sender = take a loot box
-      axios.put(`${BACKEND_URL}takeLootbox`, { initData, lootbox })
-        
-        utils.shareURL(
-          `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.uuid}`,
-          "Look! Some cool app here!"
-        );
+      const setcurrenlootbox = await (await axios.put(`${BACKEND_URL}takeLootbox`, { initData, lootbox })).data
+      if(setcurrenlootbox) console.log("setcurrenlootbox =>", setcurrenlootbox);
+
+      utils.shareURL(
+        `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.uuid}`,
+        "Look! Some cool app here!"
+      );
 
       // onShare(true);
 
