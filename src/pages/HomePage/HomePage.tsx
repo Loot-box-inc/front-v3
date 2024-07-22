@@ -29,8 +29,10 @@ export function HomePage() {
   useEffect(() => {
     const run = async () => {
       //get data from server
-      console.log("initData => ", initData)
-      console.log("BACKEND_URL => ", BACKEND_URL)
+ 
+      console.log("initialData => ", initData);
+      console.log("`Backend_url` => ", BACKEND_URL);
+
       const data = (await axios.post(`${BACKEND_URL}initialData`, { initData })).data;
 
       // Handle no lootbox
