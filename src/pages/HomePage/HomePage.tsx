@@ -3,7 +3,7 @@ import { LockedLootbox } from "@/components/LockedLootbox";
 
 // import { useUserBalance } from "@/hooks/useUserBalance";
 
-import { initInitData, initNavigator, initSettingsButton } from "@telegram-apps/sdk";
+import { initInitData } from "@telegram-apps/sdk";
 import { useEffect, useState } from "react";
 // import { supabase } from "../../supabase";
 import { useNavigate } from "react-router-dom";
