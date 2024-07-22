@@ -1,14 +1,13 @@
 import { ActionButton } from "@/pages/TasksPage/components/ActionButton";
 import { ActionItem } from "@/pages/TasksPage/components/ActionItem";
-//import { initInitData, initUtils } from "@telegram-apps/sdk";
-import { initInitData } from "@telegram-apps/sdk";
+import { initInitData, initUtils } from "@telegram-apps/sdk";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL
 
 export const TasksList = () => {
   const initData = initInitData();
- // const utils = initUtils();
+ const utils = initUtils();
   const navigate = useNavigate();
 
   const _onShare = async () => {
@@ -25,10 +24,10 @@ export const TasksList = () => {
       const setcurrenlootbox = await (await axios.put(`${BACKEND_URL}takeLootbox`, { initData, lootbox })).data
       if(setcurrenlootbox) console.log("setcurrenlootbox =>", setcurrenlootbox);
 
-     // utils.shareURL(
-     //   `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.uuid}`,
-     //  "Look! Some cool app here!"
-     // );
+     utils.shareURL(
+       `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.uuid}`,
+      "Look! Some cool app here!"
+     );
 
       // onShare(true);
 
