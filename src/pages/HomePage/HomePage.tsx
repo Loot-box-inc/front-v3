@@ -29,6 +29,7 @@ export function HomePage() {
 
       //get data from server
       console.log("initialData => ", initData);
+      console.log("`Backend_url` => ", BACKEND_URL);
       const data = (await axios.post(`${BACKEND_URL}initialData`, { initData })).data;
 
       // Handle no lootbox
