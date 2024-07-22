@@ -24,10 +24,10 @@ export const TasksList = () => {
       const setcurrenlootbox = await (await axios.put(`${BACKEND_URL}takeLootbox`, { initData, lootbox })).data
       if(setcurrenlootbox) console.log("setcurrenlootbox =>", setcurrenlootbox);
 
-      utils.shareURL(
-        `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.uuid}`,
-        "Look! Some cool app here!"
-      );
+     // utils.shareURL(
+     //   `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.uuid}`,
+     //  "Look! Some cool app here!"
+     // );
 
       // onShare(true);
 
