@@ -24,16 +24,17 @@ export function HomePage() {
   const [isLootboxAlreadyOpened, setIsLootboxAlreadyOpened] = useState(false);
   const [isNotFirstLootbox, setIsNotFirstLootbox] = useState(false);
 
- 
+
 
   useEffect(() => {
     const run = async () => {
       //get data from server
- 
+
       console.log("initialData => ", initData);
       console.log("`Backend_url` => ", BACKEND_URL);
 
-      const data = (await axios.post(`${BACKEND_URL}initialData`, { initData })).data;
+      const {data} = (await axios.post(`${BACKEND_URL}initialData`, { initData })).data;
+      console.log("data =>", data);
 
       // Handle no lootbox
       // if (!data?.length) {
@@ -41,8 +42,10 @@ export function HomePage() {
       //   return navigate("/tasks", { replace: true });
       // } 
 
-      if (data) {
+      if (data?.length) {
         const { sender_id, receiver_id, parent } = data![0];
+        console.log("sender_id, receiver_id, parent =>", sender_id, receiver_id, parent);
+
 
         // ничего не делаем, если пытаются вручную UUID в ссылке указать        
         // и отгадывают реальный НЕоткрытый lootbox => go to next /tasks screen   
