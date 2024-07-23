@@ -1,6 +1,5 @@
 import { ActionButton } from "@/pages/TasksPage/components/ActionButton";
 import { ActionItem } from "@/pages/TasksPage/components/ActionItem";
-// import { initInitData } from "@telegram-apps/sdk";
 import { initInitData, initUtils } from "@telegram-apps/sdk";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -12,28 +11,38 @@ export const TasksList = () => {
   const navigate = useNavigate();
 
   const _onShare = async () => {
-    try {
 
-      // get not used lootboxes only
-      const data = (await axios.get(`${BACKEND_URL}notUsedLootbox`)).data;
-      if (!data?.length) return;
-      const lootbox = data[Math.floor(Math.random() * data.length)];
-      
-      console.log("initialData => ", initData);
-      console.log("lootbox=>", lootbox);
-      // write yourself as a sender = take a loot box
-      await axios.put(`${BACKEND_URL}takeLootbox`, { initData, lootbox });
+    if (initData?.startParam == "debug" || initData?.startParam === undefined) {
+      console.log('debug or undefined', initData?.startParam);
 
-      utils.shareURL(
-        `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.uuid}`,
-        "Look! Some cool app here!"
-      );
+      try {
+        // get not used lootboxes only
+        const data = (await axios.get(`${BACKEND_URL}notUsedLootbox`, { headers: { 'ngrok-skip-browser-warning': '7777' } })).data;
+        if (!data?.length) {
+          console.log("There are not unused lootboxes");
+          return;
+        }
 
-      // onShare(true);
+        const lootbox = data[Math.floor(Math.random() * data.length)];
+        // write yourself as a sender = take a loot box
+        await axios.put(`${BACKEND_URL}takeLootbox`, { initData, lootbox });
+
+        utils.shareURL(
+          `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.uuid}`,
+          "Look! Some cool app here!"
+        );
+
+        // onShare(true);
+        navigate("/history");
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.log('not empty =>', initData?.startParam);
       navigate("/history");
-    } catch (error) {
-      console.error(error);
+      return
     }
+
   };
 
   return (

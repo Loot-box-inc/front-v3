@@ -17,6 +17,8 @@ export const useUserBalance = ({ initData }: useUserBalanceProps) => {
 
       const lootbox = (await axios.post(`${BACKEND_URL}startParam-lootbox`, { initData })).data;
       const usersLootboxes = (await axios.post(`${BACKEND_URL}usersLootboxes`, { initData })).data;
+      console.log("lootbox,usersLootboxes =>", lootbox, usersLootboxes);
+
 
       const { data } = lootbox;
       /*
@@ -26,7 +28,7 @@ export const useUserBalance = ({ initData }: useUserBalanceProps) => {
 
       // await supabase
       //   .from("lootboxes")
-      //   .update({ receiver_id: sender_id }) // sender of current lootbox
+      //   .update({ receiver_id: sender_id }) // sender of current lootbox 
       //   .eq("id", parent as string); // условие - parent lootbox
 
       await axios.put(`${BACKEND_URL}userBalance-currentSender`, { sender_id, parent })
@@ -42,16 +44,16 @@ export const useUserBalance = ({ initData }: useUserBalanceProps) => {
 
       setUSDT(
         usersLootboxes?.data
-          .map((i:any) => i.balance || 0) // Treat null balance as 0
-          .filter((i:any) => i < 11)
-          .reduce((accumulator:any, currentValue:any) => accumulator + currentValue, 0) // Provide a default value for reduce
+          .map((i: any) => i.balance || 0) // Treat null balance as 0
+          .filter((i: any) => i < 11)
+          .reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0) // Provide a default value for reduce
       );
 
       setLOOT(
         usersLootboxes?.data
-          .map((i:any) => i.balance || 0) // Treat null balance as 0
-          .filter((i:any) => i > 40)
-          .reduce((accumulator:any, currentValue:any) => accumulator + currentValue, 0) // Provide a default value for reduce
+          .map((i: any) => i.balance || 0) // Treat null balance as 0
+          .filter((i: any) => i > 40)
+          .reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0) // Provide a default value for reduce
       );
     };
 

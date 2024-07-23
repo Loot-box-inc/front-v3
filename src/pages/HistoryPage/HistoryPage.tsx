@@ -1,9 +1,6 @@
 import { Link } from "@/components/Link/Link";
-// import { TonConnectButton } from "@tonconnect/ui-react";
 import USDT from "@/assets/usdt.svg?react";
 import LOOT from "@/assets/loot.svg?react";
-// import { supabase } from "@/supabase";
-// import { useEffect } from "react";
 import { initInitData } from "@telegram-apps/sdk";
 import { useUserBalance } from "@/hooks/useUserBalance";
 import { useUserTransactions } from "@/hooks/useUserTransactions";
@@ -13,6 +10,12 @@ export const HistoryPage = () => {
   const initData = initInitData();
   const { USDT: usdtBalance, LOOT: lootBalance } = useUserBalance({ initData });
   const { userTransactions } = useUserTransactions({ initData });
+
+  console.log("{ USDT: usdtBalance, LOOT: lootBalance } =>",
+    { USDT: usdtBalance, LOOT: lootBalance }
+  );
+  console.log("userTransactions=>", userTransactions);
+
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-[#1D2733] text-white">
