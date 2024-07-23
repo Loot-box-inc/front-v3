@@ -22,7 +22,7 @@ export function HomePage() {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const [isSendersLootbox, setIsSendersLootbox] = useState(true);
+  const [isSendersLootbox, setIsSendersLootbox] = useState(false);
   const [isLootboxAlreadyOpened, setIsLootboxAlreadyOpened] = useState(false);
   const [isNotFirstLootbox, setIsNotFirstLootbox] = useState(false);
 
@@ -156,9 +156,20 @@ export function HomePage() {
       )}
 
       {isLootboxAlreadyOpened && (
-        <h2 className="text-center mt-50 p-5 pt-50 text-white toptitle">
-          Lootbox was already opened!
-        </h2>
+        <>
+          <h1 className="text-center mt-50 p-5 pt-50 text-white toptitle " style={{fontSize:'25px'}}>
+            Lootbox is empty!
+          </h1>
+          <div className="toptitle"
+            onClick={_onShare}
+            style={{
+              background: 'dodgerblue',
+              padding: '10px',
+              color: 'white',
+              borderRadius: '5px',
+              cursor: 'pointer',
+            }}>Send another task</div>
+        </>
       )}
 
       {isNotFirstLootbox && (
@@ -177,7 +188,7 @@ export function HomePage() {
 
         </>
       )}
-      {isSendersLootbox ? ("") : (
+      {isSendersLootbox ? ("") : isLootboxAlreadyOpened ? ("") : (
         <>
           <div style={{
             position: 'absolute',
