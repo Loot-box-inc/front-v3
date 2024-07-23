@@ -8,14 +8,14 @@ export const TasksList = () => {
   const initData = initInitData();
   const utils = initUtils();
   const navigate = useNavigate();
-
+  
   const _onShare = async () => {
     try {
       const { data } = await supabase
         .from("lootboxes")
         .select("uuid")
         .is("sender_id", null); // get not used lootboxes only
-
+      console.log('send-------', !data?.length);
       if (!data?.length) return;
 
       const lootbox = data[Math.floor(Math.random() * data.length)];
