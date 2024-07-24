@@ -1,8 +1,20 @@
-import { TonConnectButton } from "@tonconnect/ui-react";
-import { TonConnectUIProvider } from "@tonconnect/ui-react";
+
+import { useEffect } from "react";
+import { TonConnectButton, TonConnectUIProvider, useTonAddress } from "@tonconnect/ui-react";
 import { Lootbox } from "@/components/Lootbox";
+import { initInitData } from "@telegram-apps/sdk";
 
 export const ClaimPage = () => {
+  const initData = initInitData();
+  const walletAddress = useTonAddress();
+
+  useEffect(() => {
+    if (walletAddress) {
+      console.log("Wallet Address Update", walletAddress, "Init Data", initData)
+    }
+  }, [walletAddress]);
+
+  console.log("Init Data:", initData, "0Wallet Addr:", walletAddress);
   return (
     <TonConnectUIProvider manifestUrl="https://lootfront.netlify.app/tonconnect-manifest.json">
       <div className="mt-10 flex flex-col items-center justify-center justify-items-center" style={{ paddingTop: '32%' }}>
