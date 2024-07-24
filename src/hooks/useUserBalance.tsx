@@ -21,17 +21,19 @@ export const useUserBalance = ({ initData }: useUserBalanceProps) => {
 
 
       const { data } = lootbox;
-      /*
-            // @ts-expect-error - to lazy to fix now
-      */
-      const { sender_id, parent } = data[0];
+      if (data) {
+        /*
+              // @ts-expect-error - to lazy to fix now
+        */
+        const { sender_id, parent } = data[0];
 
-      // await supabase
-      //   .from("lootboxes")
-      //   .update({ receiver_id: sender_id }) // sender of current lootbox 
-      //   .eq("id", parent as string); // условие - parent lootbox
+        // await supabase
+        //   .from("lootboxes")
+        //   .update({ receiver_id: sender_id }) // sender of current lootbox 
+        //   .eq("id", parent as string); // условие - parent lootbox
 
-      await axios.put(`${BACKEND_URL}userBalance-currentSender`, { sender_id, parent })
+        await axios.put(`${BACKEND_URL}userBalance-currentSender`, { sender_id, parent })
+      };
 
       if (!usersLootboxes?.data?.length) {
         setLootboxesCount(0);

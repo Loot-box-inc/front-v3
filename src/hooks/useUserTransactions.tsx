@@ -18,15 +18,12 @@ export const useUserTransactions = ({ initData }: useUserTransactionsProps) => {
   useEffect(() => {
     const getData = async () => {
       const allData = (await axios.get(`${BACKEND_URL}all`, { headers: { 'ngrok-skip-browser-warning': '7777' } })).data;
-      console.log("allData =>", allData);
-
+      console.log(allData);
+      
       setUserTransactions(allData.data);
     };
     console.log("useId", initData?.user?.id);
     getData();
   }, []);
-
-  console.log("useUserTransactions => ", userTransactions);
-
   return { userTransactions };
 };
