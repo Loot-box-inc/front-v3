@@ -22,6 +22,8 @@ export function HomePage() {
   const [isLootboxAlreadyOpened, setIsLootboxAlreadyOpened] = useState(false);
   const [isNotFirstLootbox, setIsNotFirstLootbox] = useState(false);
   const [isBackLink, setIsBackLink] = useState(false);
+  const [isSameLink, setIsSameLink] = useState(false);
+
 
   const _onShare = async () => {
     try {
@@ -52,6 +54,11 @@ export function HomePage() {
     return false;
   };
 
+  const checkSameLink = async (senderID: any): Promise<boolean> => {
+    const { data } = await axios.post(`${BACKEND_URL}checkSameLink`, { initData, senderID })
+    if (data) return true;
+    return false;
+  };
 
   useEffect(() => {
     const run = async () => {
@@ -64,20 +71,25 @@ export function HomePage() {
       const { data } = (await axios.post(`${BACKEND_URL}initialData`, { initData })).data;
       console.log("initialData data =>", data);
 
-
       // Handle no lootbox
       // if (!data?.length) {
       //   setIsLoading(false);
       //   return navigate("/tasks", { replace: true });
       // } 
 
-      if (data?.length) {
+      if (data.length > 0) {
         const { sender_id, receiver_id, parent, uuid } = data![0];
         console.log("sender_id, receiver_id, parent =>", sender_id, receiver_id, parent, uuid);
 
         const result_check = await checkBackLink(sender_id);
         if (result_check) {
           setIsBackLink(true);
+          return;
+        }
+
+        const result_checksame = await checkSameLink(sender_id);
+        if (result_checksame) {
+          setIsSameLink(true);
           return;
         }
 
@@ -168,10 +180,28 @@ export function HomePage() {
         </>
       )}
 
+
       {isBackLink && (
         <>
           <h2 className="text-center mt-50 p-5 pt-50 text-white toptitle ">
             You cannot send link to this user anymore.<br />Try again
+          </h2>
+          <div className="toptitle"
+            onClick={_onShare}
+            style={{
+              background: 'dodgerblue',
+              padding: '10px',
+              color: 'white',
+              borderRadius: '5px',
+              cursor: 'pointer',
+            }}>Send another task</div>
+        </>
+      )}
+
+      {isSameLink && (
+        <>
+          <h2 className="text-center mt-50 p-5 pt-50 text-white toptitle ">
+            You cannot send link more than once to the same telegramID<br />Try again
           </h2>
           <div className="toptitle"
             onClick={_onShare}
@@ -221,40 +251,41 @@ export function HomePage() {
       {isSendersLootbox ? ("") :
         isLootboxAlreadyOpened ? ("") :
           isBackLink ? ("") :
-            (
-              <>
-                <div style={{
-                  position: 'absolute',
-                  width: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  paddingBottom: '30%'
+            isSameLink ? ("") :
+              (
+                <>
+                  <div style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingBottom: '30%'
 
-                }}>
-                  <LockedLootbox width={220} height={220} />
-                </div>
-
-                <div style={{
-                  position: 'absolute',
-                  bottom: '10%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '20px'
-                }}>
-                  <div style={{ color: 'white', textAlign: 'center' }}>
-                    <h2 className="toptitle">To open this box</h2>
-                    <h2 className="toptitle">you need to fulfill a task</h2>
+                  }}>
+                    <LockedLootbox width={220} height={220} />
                   </div>
-                  <Link to="/tasks" className="bg-blue rounded p-2 px-10 text-white">
-                    Go!
-                  </Link>
-                </div>
-              </>
-            )}
+
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '10%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '20px'
+                  }}>
+                    <div style={{ color: 'white', textAlign: 'center' }}>
+                      <h2 className="toptitle">To open this box</h2>
+                      <h2 className="toptitle">you need to fulfill a task</h2>
+                    </div>
+                    <Link to="/tasks" className="bg-blue rounded p-2 px-10 text-white">
+                      Go!
+                    </Link>
+                  </div>
+                </>
+              )}
     </main>
   );
 }
