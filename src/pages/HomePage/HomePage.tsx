@@ -1,10 +1,6 @@
 import { Link } from "@/components/Link/Link";
 import { LockedLootbox } from "@/components/LockedLootbox";
-
-// import { useUserBalance } from "@/hooks/useUserBalance";
-
 import { useEffect, useState } from "react";
-// import { supabase } from "../../supabase";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL
@@ -25,6 +21,7 @@ export function HomePage() {
   const [isSendersLootbox, setIsSendersLootbox] = useState(false);
   const [isLootboxAlreadyOpened, setIsLootboxAlreadyOpened] = useState(false);
   const [isNotFirstLootbox, setIsNotFirstLootbox] = useState(false);
+  const [isBackLink, setIsBackLink] = useState(false);
 
   const _onShare = async () => {
     try {
@@ -49,8 +46,16 @@ export function HomePage() {
     }
   };
 
+  const checkBackLink = async (senderID: any): Promise<boolean> => {
+    const { data } = await axios.post(`${BACKEND_URL}checkBackLink`, { initData, senderID })
+    if (data) return true;
+    return false;
+  };
+
+
   useEffect(() => {
     const run = async () => {
+
       //get data from server
 
       console.log("initialData => ", initData);
@@ -58,6 +63,7 @@ export function HomePage() {
 
       const { data } = (await axios.post(`${BACKEND_URL}initialData`, { initData })).data;
       console.log("initialData data =>", data);
+
 
       // Handle no lootbox
       // if (!data?.length) {
@@ -68,6 +74,12 @@ export function HomePage() {
       if (data?.length) {
         const { sender_id, receiver_id, parent, uuid } = data![0];
         console.log("sender_id, receiver_id, parent =>", sender_id, receiver_id, parent, uuid);
+
+        const result_check = await checkBackLink(sender_id);
+        if (result_check) {
+          setIsBackLink(true);
+          return;
+        }
 
         // ничего не делаем, если пытаются вручную UUID в ссылке указать        
         // и отгадывают реальный НЕоткрытый lootbox => go to next /tasks screen   
@@ -91,6 +103,7 @@ export function HomePage() {
         const usersOpenedLootboxes = (await axios.post(`${BACKEND_URL}usersOpenedLootboxes`, { initData })).data;
 
         // взять всех сендеров и проверить нет ли там сендера текущего лутбокса
+        //take all senders and check if there is a sender of the current lootbox
         setIsNotFirstLootbox(
           usersOpenedLootboxes?.data
             ?.map((i: any) => i.sender_id)
@@ -155,9 +168,26 @@ export function HomePage() {
         </>
       )}
 
+      {isBackLink && (
+        <>
+          <h2 className="text-center mt-50 p-5 pt-50 text-white toptitle ">
+            You cannot send link to this user anymore.<br />Try again
+          </h2>
+          <div className="toptitle"
+            onClick={_onShare}
+            style={{
+              background: 'dodgerblue',
+              padding: '10px',
+              color: 'white',
+              borderRadius: '5px',
+              cursor: 'pointer',
+            }}>Send another task</div>
+        </>
+      )}
+
       {isLootboxAlreadyOpened && (
         <>
-          <h1 className="text-center mt-50 p-5 pt-50 text-white toptitle " style={{fontSize:'25px'}}>
+          <h1 className="text-center mt-50 p-5 pt-50 text-white toptitle " style={{ fontSize: '25px' }}>
             Lootbox is empty!
           </h1>
           <div className="toptitle"
@@ -188,40 +218,43 @@ export function HomePage() {
 
         </>
       )}
-      {isSendersLootbox ? ("") : isLootboxAlreadyOpened ? ("") : (
-        <>
-          <div style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingBottom: '30%'
+      {isSendersLootbox ? ("") :
+        isLootboxAlreadyOpened ? ("") :
+          isBackLink ? ("") :
+            (
+              <>
+                <div style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  paddingBottom: '30%'
 
-          }}>
-            <LockedLootbox width={220} height={220} />
-          </div>
+                }}>
+                  <LockedLootbox width={220} height={220} />
+                </div>
 
-          <div style={{
-            position: 'absolute',
-            bottom: '10%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '20px'
-          }}>
-            <div style={{ color: 'white', textAlign: 'center' }}>
-              <h2 className="toptitle">To open this box</h2>
-              <h2 className="toptitle">you need to fulfill a task</h2>
-            </div>
-            <Link to="/tasks" className="bg-blue rounded p-2 px-10 text-white">
-              Go!
-            </Link>
-          </div>
-        </>
-      )}
+                <div style={{
+                  position: 'absolute',
+                  bottom: '10%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '20px'
+                }}>
+                  <div style={{ color: 'white', textAlign: 'center' }}>
+                    <h2 className="toptitle">To open this box</h2>
+                    <h2 className="toptitle">you need to fulfill a task</h2>
+                  </div>
+                  <Link to="/tasks" className="bg-blue rounded p-2 px-10 text-white">
+                    Go!
+                  </Link>
+                </div>
+              </>
+            )}
     </main>
   );
 }
