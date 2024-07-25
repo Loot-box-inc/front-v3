@@ -24,7 +24,7 @@ export function HomePage() {
   const [isBackLink, setIsBackLink] = useState(false);
   const [isSameLink, setIsSameLink] = useState(false);
 
-  const _onShare = async () => {
+  const _onShareFirst = async () => {
     try {
       const uuid = (await axios.post(`${BACKEND_URL}createNewLootbox`, { headers: { 'ngrok-skip-browser-warning': '7777' }, initData })).data;
       console.log('uuid', uuid)
@@ -159,7 +159,7 @@ export function HomePage() {
             You cannot send the lootbox to yourself. <br />Try again
           </h2>
           <div className="toptitle"
-            onClick={_onShare}
+            onClick={_onShareFirst}
             style={{
               background: 'dodgerblue',
               padding: '10px',
@@ -177,7 +177,7 @@ export function HomePage() {
             You cannot send link to this user anymore.<br />Try again
           </h2>
           <div className="toptitle"
-            onClick={_onShare}
+            onClick={_onShareFirst}
             style={{
               background: 'dodgerblue',
               padding: '10px',
@@ -194,7 +194,7 @@ export function HomePage() {
             You cannot send link more than once to the same telegramID<br />Try again
           </h2>
           <div className="toptitle"
-            onClick={_onShare}
+            onClick={_onShareFirst}
             style={{
               background: 'dodgerblue',
               padding: '10px',
@@ -211,7 +211,7 @@ export function HomePage() {
             Lootbox is empty!
           </h1>
           <div className="toptitle"
-            onClick={_onShare}
+            onClick={_onShareFirst}
             style={{
               background: 'dodgerblue',
               padding: '10px',
