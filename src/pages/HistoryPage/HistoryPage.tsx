@@ -1,44 +1,15 @@
 import { Link } from "@/components/Link/Link";
 import USDT from "@/assets/usdt.svg?react";
 import LOOT from "@/assets/loot.svg?react";
-import { initInitData, initUtils } from "@telegram-apps/sdk";
+import { initInitData} from "@telegram-apps/sdk";
 import { useUserBalance } from "@/hooks/useUserBalance";
 import { useUserTransactions } from "@/hooks/useUserTransactions";
 import { format } from "date-fns";
-import axios from 'axios';
-const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL
 
 export const HistoryPage = () => {
   const initData = initInitData();
-  const utils = initUtils();
   const { USDT: usdtBalance, LOOT: lootBalance } = useUserBalance({ initData });
   const { userTransactions } = useUserTransactions({ initData });
-
-  const SendAnotherStyle = {
-    padding: '8px 20px',
-    backgroundColor: '#3fa9e4',
-    borderRadius: '50px',
-    cursor: 'pointer',
-  }
-
-  const SendAnother = async () => {
-    alert('Send another')
-    // get not used lootboxes only
-    const data = (await axios.get(`${BACKEND_URL}notUsedLootbox`, { headers: { 'ngrok-skip-browser-warning': '7777' } })).data;
-    if (!data?.length) {
-      console.log("There are not unused lootboxes");
-      return;
-    }
-
-    const lootbox = data[Math.floor(Math.random() * data.length)];
-    // write yourself as a sender = take a loot box
-    await axios.put(`${BACKEND_URL}takeLootbox`, { initData, lootbox });
-
-    utils.shareURL(
-      `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.uuid}`,
-      "Look! Some cool app here!"
-    );
-  }
 
   console.log("{ USDT: usdtBalance, LOOT: lootBalance } =>",
     { USDT: usdtBalance, LOOT: lootBalance }
@@ -63,15 +34,12 @@ export const HistoryPage = () => {
         {/* <TonConnectButton /> */}
       </div>
 
-      {/* <Link
-        to="/history"
+      <Link
+        to="/tasks"
         className="bg-blue py-2 px-6 text-white rounded-full my-12"
       >
           Send another link
-      </Link> */}
-      <div style={SendAnotherStyle} onClick={SendAnother}>
-        Send another link
-      </div>
+      </Link>
 
       {/* Transaction history */}
       <div className="w-full px-2">
