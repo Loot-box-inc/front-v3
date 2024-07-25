@@ -11,38 +11,14 @@ export const TasksList = () => {
   const navigate = useNavigate();
 
   const _onShare = async () => {
+      const uuid = (await axios.post(`${BACKEND_URL}createNewLootbox`, { headers: { 'ngrok-skip-browser-warning': '7777' }, initData })).data;
+      
+      utils.shareURL(
+        `${import.meta.env.VITE_APP_BOT_URL}?startapp=${uuid}`,
+        "Look! Some cool app here!"
+      );
 
-    if (initData?.startParam == "debug" || initData?.startParam === undefined) {
-      console.log('debug or undefined', initData?.startParam);
-
-      try {
-        // get not used lootboxes only
-        const data = (await axios.get(`${BACKEND_URL}notUsedLootbox`, { headers: { 'ngrok-skip-browser-warning': '7777' } })).data;
-        if (!data?.length) {
-          console.log("There are not unused lootboxes");
-          return;
-        }
-
-        const lootbox = data[Math.floor(Math.random() * data.length)];
-        // write yourself as a sender = take a loot box
-        await axios.put(`${BACKEND_URL}takeLootbox`, { initData, lootbox });
-
-        utils.shareURL(
-          `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.uuid}`,
-          "Look! Some cool app here!"
-        );
-
-        // onShare(true);
-        navigate("/history");
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      console.log('not empty =>', initData?.startParam);
       navigate("/history");
-      return
-    }
-
   };
 
   return (

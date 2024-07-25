@@ -24,21 +24,12 @@ export function HomePage() {
   const [isBackLink, setIsBackLink] = useState(false);
   const [isSameLink, setIsSameLink] = useState(false);
 
-
   const _onShare = async () => {
     try {
-      // get not used lootboxes only
-      const data = (await axios.get(`${BACKEND_URL}notUsedLootbox`, { headers: { 'ngrok-skip-browser-warning': '7777' } })).data;
-      if (!data?.length) {
-        console.log("There are not unused lootboxes");
-        return;
-      }
-      const lootbox = data[Math.floor(Math.random() * data.length)];
-      // write yourself as a sender = take a loot box
-      await axios.put(`${BACKEND_URL}takeLootbox`, { initData, lootbox });
-
+      const uuid = (await axios.post(`${BACKEND_URL}createNewLootbox`, { headers: { 'ngrok-skip-browser-warning': '7777' }, initData })).data;
+      console.log('uuid', uuid)
       utils.shareURL(
-        `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.uuid}`,
+        `${import.meta.env.VITE_APP_BOT_URL}?startapp=${uuid}`,
         "Look! Some cool app here!"
       );
       // onShare(true);
@@ -63,11 +54,10 @@ export function HomePage() {
   useEffect(() => {
     const run = async () => {
 
-      //get data from server
-
       console.log("initialData => ", initData);
       console.log("`Backend_url` => ", BACKEND_URL);
 
+      //get data from server
       const { data } = (await axios.post(`${BACKEND_URL}initialData`, { initData })).data;
       console.log("initialData data =>", data);
 
@@ -77,7 +67,7 @@ export function HomePage() {
       //   return navigate("/tasks", { replace: true });
       // } 
 
-      if (data.length > 0) {
+      if (data?.length > 0) {
         const { sender_id, receiver_id, parent, uuid } = data![0];
         console.log("sender_id, receiver_id, parent =>", sender_id, receiver_id, parent, uuid);
 
