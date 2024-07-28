@@ -1,7 +1,7 @@
 import { Link } from "@/components/Link/Link";
 import USDT from "@/assets/usdt.svg?react";
 import LOOT from "@/assets/loot.svg?react";
-import { initInitData} from "@telegram-apps/sdk";
+import { initInitData } from "@telegram-apps/sdk";
 import { useUserBalance } from "@/hooks/useUserBalance";
 import { useUserTransactions } from "@/hooks/useUserTransactions";
 import { format } from "date-fns";
@@ -38,7 +38,7 @@ export const HistoryPage = () => {
         to="/tasks"
         className="bg-blue py-2 px-6 text-white rounded-full my-12"
       >
-          Send another link
+        Send another link
       </Link>
 
       {/* Transaction history */}
@@ -62,7 +62,7 @@ export const HistoryPage = () => {
               </p>
               <p className="w-1/4">{el.receiver_id || "-"}</p>
 
-              {el.Status_opened === "received" && (
+              {el.Status_opened === "opened" && (
                 <Link
                   to="/claim"
                   className="bg-blue px-2 py-1 text-white rounded-full w-fit flex truncate"
@@ -70,6 +70,12 @@ export const HistoryPage = () => {
                   See lootbox
                 </Link>
               )}
+
+              {
+                el.Status_opened === "received" && (
+                  <p>{el.balance}</p>
+                )
+              }
 
               {el.Status_opened === "opened" && (
                 <p>

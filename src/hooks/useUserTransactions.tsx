@@ -12,18 +12,17 @@ type userTransactionsType =
   | null;
 
 export const useUserTransactions = ({ initData }: useUserTransactionsProps) => {
-  const [userTransactions, setUserTransactions] =
-    useState<userTransactionsType>();
+  const [userTransactions, setUserTransactions] = useState<userTransactionsType>();
 
   useEffect(() => {
     const getData = async () => {
       const allData = (await axios.get(`${BACKEND_URL}all`, { headers: { 'ngrok-skip-browser-warning': '7777' } })).data;
-      console.log(allData);
-      
       setUserTransactions(allData.data);
     };
+
     console.log("useId", initData?.user?.id);
     getData();
   }, []);
+  
   return { userTransactions };
 };
