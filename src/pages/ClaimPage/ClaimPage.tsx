@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { TonConnectButton, TonConnectUIProvider, useTonAddress  } from "@tonconnect/ui-react";
+import { TonConnectButton, TonConnectUIProvider, useTonAddress } from "@tonconnect/ui-react";
 import { Lootbox } from "@/components/Lootbox";
 import { initInitData } from "@telegram-apps/sdk";
 import axios from "axios";
@@ -10,18 +10,23 @@ export const ClaimPage = () => {
   const initData = initInitData();
   const walletAddress = useTonAddress();
 
-  
+
+  const setWalletAddress = async () => {
+    axios.post(`${BACKEND_URL}addWalletAddr`, { uuid: initData?.startParam, walletAddr: walletAddress });
+  }
+
   useEffect(() => {
-    if(walletAddress) {
-      console.log("Wallet Address Update", walletAddress, "::StartParam", initData?.startParam)
-      axios.post(`${BACKEND_URL}addWalletAddr`, { uuid: initData?.startParam, walletAddr: walletAddress });
+    if (walletAddress) {
+      setWalletAddress();
+      // alert(`"Wallet Address Update", ${walletAddress}, "::StartParam", ${initData?.startParam}`)
     } else {
       console.log("Wallet Address not found.")
+      // alert("Wallet Address not found")
     }
   }, [walletAddress]);
-  
+
   console.log("Init Data:", initData, "0Wallet Addr:", walletAddress);
-  
+
   return (
     <TonConnectUIProvider manifestUrl="https://lootfront.netlify.app/tonconnect-manifest.json">
       <div className="mt-10 flex flex-col items-center justify-center justify-items-center" style={{ paddingTop: '32%' }}>
